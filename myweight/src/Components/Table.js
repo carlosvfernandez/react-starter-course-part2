@@ -5,7 +5,7 @@ export default ({ records }) => {
 
     const renderRow = record => {
         return (
-            <tr key={record[0]} >
+            <tr key={(record[0] + Math.random() * 100)} >
                 <td>{moment(record[0]).format('LLLL')}</td>
                 <td>{record[1].toFixed(1)}</td>
             </tr>)

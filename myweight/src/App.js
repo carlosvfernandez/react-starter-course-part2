@@ -7,12 +7,35 @@ import Form from './Components/Form'
 
 class App extends Component {
   state = {
-    records: []
+    records: [],
+    modal: false
   }
-  onCreateRecord = () => {
-    const newRecord = [+moment(), Math.random() * 200];
+
+  componentDidMount() {
+    if (localStorage.getItem('records')) {
+      const records = JSON.parse(localStorage.getItem('records'));
+      this.setState({
+        records
+      })
+    }
+  }
+  acceptRecord = ({ date, weight }) => {
+    const newRecord = [+date, +weight];
+    const newRecodsSate = [...this.state.records, newRecord];
+    localStorage.setItem('records', JSON.stringify(newRecodsSate));
     this.setState({
-      records: [...this.state.records, newRecord]
+      records: newRecodsSate
+    })
+  }
+  onCloseForm = () => {
+    this.setState({
+      modal: false
+    })
+  }
+  restartRecords = () => {
+    localStorage.clear();
+    this.setState({
+      records: []
     })
   }
   render() {
@@ -24,7 +47,11 @@ class App extends Component {
 
     return (
       <div>
-      <Form/>
+        <Form
+          visible={this.state.modal}
+          onAccept={this.acceptRecord}
+          onClose={this.onCloseForm}
+        />
         <TitleBar />
         <main>
           <div className="valign-wrapper">
@@ -33,13 +60,16 @@ class App extends Component {
           <div className="row">
             <div className="col l6 m12 s12">
               <Graph records={this.state.records} />
+              <a className="btn" onClick={this.restartRecords}>Restart Graph</a>
             </div>
             <div className="col l6 m12 s12">
               <Table records={this.state.records} />
             </div>
           </div>
         </main>
-        <a className="btn-floating btn-large waves-effect waves-light red" onClick={this.onCreateRecord} style={btnAdd}>
+        <a className="btn-floating btn-large waves-effect waves-light red"
+          style={btnAdd}
+          onClick={() => this.setState({ modal: true })}>
           <i className="material-icons">add</i>
         </a>
       </div>

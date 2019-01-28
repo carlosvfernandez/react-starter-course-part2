@@ -3,7 +3,6 @@ import React from 'react'
 import './Form.css'
 import swal from 'sweetalert'
 import DatePicker from 'react-datepicker'
-import moment from 'moment'
 
 export default class Form extends React.Component {
     state = {
@@ -14,11 +13,12 @@ export default class Form extends React.Component {
     onSubmit = () => {
         const { date, weight } = this.state;
 
-        if (!weight || weight < 0) {
-            swal('Invalid Weight', 'The weight recods had to be valid', 'error')
+        if (!weight || weight < 0 || isNaN(weight)) {
+            swal('Invalid Weight', 'The weight recods had to be valid', 'error');
+        } else {
+            this.props.onAccept(this.state);
         }
     }
-
     dateChange = (date) => {
         this.setState({ date })
     }
@@ -27,10 +27,11 @@ export default class Form extends React.Component {
             weight: evt.target.value
         })
     }
+
     render() {
         return (
             <div className="row">
-                <div className="form-container col s4 offset-s4 z-depth-4 cyan lighten-3">
+                <div className={`form-container scale-transition scale-out ${this.props.visible ? "scale-in" : ""} col s4 offset-s4 z-depth-4 cyan lighten-3`}>
                     <form>
                         <label htmlFor="date">
                             Date:
@@ -40,8 +41,8 @@ export default class Form extends React.Component {
                             Weight:
                             <input type="text" name="weight" value={this.state.weight} onChange={this.weightChange} id="weight" />
                         </label>
-                        <input type="button" onClick={this.onSubmit} value="Add"></input>
-                        <input type="button" value="Close"></input>
+                        <input type="button" className="btn" onClick={this.onSubmit} value="Add"></input>
+                        <input type="button" className="btn" value="Close" onClick={() => this.props.onClose()}></input>
                     </form>
                 </div>
             </div>

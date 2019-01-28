@@ -16,7 +16,7 @@ class Graph extends React.Component {
                 text: 'My weight register'
             },
             xAxis: {
-                type: "datetime"    
+                type: "datetime"
             },
             series: [{
                 name: 'Weight',
@@ -30,8 +30,6 @@ class Graph extends React.Component {
             <div id="graph" className="z-deph-2 hoverable"></div>
         )
     }
-
-
 }
 
 export default Graph;
